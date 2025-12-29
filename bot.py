@@ -59,8 +59,9 @@ async def get_or_create_user(user_id):
 async def update_leaderboard_cache():
     while True:
         top_users = await users_collection.find().sort("referral_count", -1).limit(10).to_list(10)
-        await leaderboard_cache.drop()
-        await leaderboard_cache.insert_many(top_users)
+        if top_users:  # Fix: Only insert if not empty
+            await leaderboard_cache.drop()
+            await leaderboard_cache.insert_many(top_users)
         await asyncio.sleep(300)  # Update every 5 minutes
 
 # Helper: Get user's rank
@@ -194,12 +195,12 @@ Current Rank: {rank or 'N/A'}
         ])
         await query.edit_message_text(text, reply_markup=keyboard)
 
-# Run the bot
+# Run the bot (Pyrogram v2 style)
 async def main():
     asyncio.create_task(update_leaderboard_cache())  # Start leaderboard updater
     await app.start()
     print("Bot started")
-    await app.idle()
+    # No idle() in v2
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    app.run(main())
