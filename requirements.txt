@@ -1,3 +1,4 @@
 pyrogram
 motor
 python-dotenv
+TgCrypto
