@@ -1,4 +1,2 @@
-pyrogram
-motor
-python-dotenv
-TgCrypto
+
+python-telegram-bot==20.7
